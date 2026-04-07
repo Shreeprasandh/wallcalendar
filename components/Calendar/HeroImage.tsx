@@ -40,11 +40,13 @@ export default function HeroImage({ month, year, direction }: HeroImageProps) {
           transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
           style={{ position: "absolute", inset: 0 }}
         >
-          <img
+          <Image
             src={img.src}
             alt={img.alt}
+            fill
+            priority={true}
             className="hero-img"
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            style={{ objectFit: "cover" }}
           />
           <div className="hero-overlay" />
 

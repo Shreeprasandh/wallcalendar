@@ -62,19 +62,30 @@ export default function DayCell({
 
   const handleLeave = () => {
     onHover(null);
-    setShowTooltip(false);
+    if (holiday) setShowTooltip(false);
+  };
+
+  const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+    if (!day.isCurrentMonth) return;
+    
+    // Show tooltip on click/tap for holidays
+    if (holiday) {
+      setShowTooltip(true);
+    }
+    
+    onClick(day.date);
   };
 
   return (
     <div
       className={cellClass}
-      onClick={() => day.isCurrentMonth && onClick(day.date)}
+      onClick={handleClick}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       aria-label={`${day.dayNumber}${holiday ? `, ${holiday.name}` : ""}`}
       role="button"
       tabIndex={day.isCurrentMonth ? 0 : -1}
-      onKeyDown={(e) => e.key === "Enter" && day.isCurrentMonth && onClick(day.date)}
+      onKeyDown={(e) => e.key === "Enter" && handleClick(e)}
     >
       {isToday && !isStart && !isEnd && (
         <div className="day-today-ring" />

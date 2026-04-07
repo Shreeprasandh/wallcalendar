@@ -472,14 +472,20 @@ html, body {
 }
 
 /* ─── TOOLTIP ────────────────────────────────────────────────── */
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 .tooltip-wrap {
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 1000; /* Ensure tooltip is above almost everything */
   pointer-events: none;
   white-space: nowrap;
+  animation: tooltipIn 200ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .tooltip-box {
@@ -488,9 +494,10 @@ html, body {
   font-family: var(--font-body);
   font-size: 0.65rem;
   font-weight: 500;
-  padding: 0.3rem 0.55rem;
-  border-radius: 6px;
-  box-shadow: var(--shadow-md);
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(104, 59, 43, 0.35);
+  position: relative;
 }
 
 .tooltip-box::after {
@@ -499,7 +506,7 @@ html, body {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 5px solid transparent;
+  border: 6px solid transparent;
   border-top-color: var(--primary);
 }
 
