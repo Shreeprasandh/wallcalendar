@@ -1,0 +1,738 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────────── */
+:root {
+  --bg:          #faf6f2;
+  --bg-alt:      #f0ebe5;
+  --primary:     #683b2b;
+  --primary-hover: #7a4533;
+  --primary-light: #8a5040;
+  --medium:      #e9cec5;
+  --medium-dark: #d4b5a8;
+  --text:        #683b2b;
+  --text-muted:  #9e7060;
+  --text-faint:  #c4a090;
+  --white:       #ffffff;
+  --shadow-sm:   0 2px 8px rgba(104, 59, 43, 0.08);
+  --shadow-md:   0 8px 32px rgba(104, 59, 43, 0.14);
+  --shadow-lg:   0 20px 60px rgba(104, 59, 43, 0.18);
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --transition:  300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body:   'Inter', system-ui, sans-serif;
+}
+
+/* Force NextJS dev indicator to hide entirely */
+#next-route-announcer,
+nextjs-portal,
+#__next-build-watcher,
+[data-nextjs-toast],
+[data-nextjs-dialog] {
+  display: none !important;
+}
+
+/* ─── RESETS ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-y: scroll; /* Force vertical scrollbar to stop layout jumps */
+  overflow-x: hidden;
+}
+
+/* ─── PAGE WRAPPER ───────────────────────────────────────────── */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4rem 1rem 1rem 1rem; /* 4rem top padding effectively centers it initially but prevents moving */
+  background: var(--bg);
+  transition: background var(--transition);
+  position: relative;
+}
+
+.page-bg-pattern {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(104, 59, 43, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(233, 206, 197, 0.15) 0%, transparent 50%);
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 900px;
+  transform: scale(0.85); /* Zoomed out a bit more as requested */
+  margin: auto; /* Force flex centering */
+}
+
+/* ─── TOP BAR ────────────────────────────────────────────────── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  padding: 0;
+}
+
+.brand {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+}
+
+.brand span {
+  opacity: 0.5;
+  font-weight: 400;
+}
+
+/* ─── CALENDAR CARD ──────────────────────────────────────────── */
+.calendar-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transition: background var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+
+.calendar-animator {
+  background: var(--white);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  transform-style: preserve-3d;
+  width: 100%;
+}
+
+/* ─── BINDER RING ────────────────────────────────────────────── */
+.binder-ring-bar {
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--medium);
+  padding: 0.35rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  transition: background var(--transition);
+}
+
+.ring {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--medium-dark);
+  background: linear-gradient(135deg, var(--white) 40%, var(--medium) 100%);
+  box-shadow: inset 0 2px 4px rgba(104,59,43,0.12), 0 1px 3px rgba(104,59,43,0.15);
+  flex-shrink: 0;
+}
+
+/* ─── MAIN LAYOUT ────────────────────────────────────────────── */
+.calendar-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 480px;
+}
+
+/* ─── HERO IMAGE PANEL ───────────────────────────────────────── */
+.hero-panel {
+  position: relative;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 45%,
+    rgba(104, 59, 43, 0.35) 70%,
+    rgba(104, 59, 43, 0.75) 100%
+  );
+}
+
+.hero-chevron-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.hero-chevron {
+  display: block;
+  width: 100%;
+}
+
+.hero-month-tag {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem 1.4rem 1.2rem;
+  text-align: right;
+}
+
+.hero-year {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.1rem;
+}
+
+.hero-month-name {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  display: block;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+/* ─── RIGHT PANEL ────────────────────────────────────────────── */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.75rem 1.5rem 1.5rem;
+  overflow: hidden;
+}
+
+/* ─── CALENDAR HEADER ────────────────────────────────────────── */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-shrink: 0;
+}
+
+.cal-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--medium);
+  background: transparent;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform 150ms;
+}
+
+.cal-nav-btn:hover {
+  background: var(--medium);
+  border-color: var(--medium-dark);
+  transform: scale(1.08);
+}
+
+.cal-nav-btn:active {
+  transform: scale(0.95);
+}
+
+.cal-title {
+  text-align: center;
+  line-height: 1;
+}
+
+.cal-title-month {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.02em;
+  display: block;
+}
+
+.cal-title-year {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+/* ─── TODAY BUTTON ───────────────────────────────────────────── */
+.today-btn {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--medium);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.today-btn:hover {
+  background: var(--primary);
+  color: var(--bg);
+  border-color: var(--primary);
+}
+
+/* ─── CALENDAR GRID ──────────────────────────────────────────── */
+.cal-grid-wrap {
+  flex: 1;
+  overflow: hidden;
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 0.35rem;
+}
+
+.weekday-label {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 0.2rem 0;
+  color: var(--text-muted);
+}
+
+.weekday-label.weekend {
+  color: var(--primary);
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+/* ─── DAY CELL ───────────────────────────────────────────────── */
+.day-cell {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 150ms, transform 150ms, box-shadow 150ms;
+  user-select: none;
+  min-width: 0;
+}
+
+.day-cell:hover:not(.day-other-month) {
+  background: var(--medium);
+  transform: scale(1.08);
+  z-index: 2;
+  box-shadow: var(--shadow-sm);
+}
+
+.day-cell.day-other-month {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.day-cell.day-other-month:hover {
+  transform: none;
+  background: transparent;
+}
+
+.day-number {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1;
+  z-index: 1;
+  transition: color 150ms;
+}
+
+.day-number.weekend-num {
+  color: var(--primary);
+}
+
+/* Today */
+.day-cell.day-today .day-number-wrap {
+  position: relative;
+}
+
+.day-today-ring {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 1px solid var(--primary);
+}
+
+/* Selection states */
+@keyframes rangeSelectRotate {
+  0% { 
+    transform: scale(0) rotate(-180deg); 
+    opacity: 0; 
+    border-radius: 50%; 
+  }
+  100% { 
+    transform: scale(1.1) rotate(0); 
+    opacity: 1; 
+    border-radius: var(--radius-sm); 
+  }
+}
+
+.day-cell.day-range-start,
+.day-cell.day-range-end {
+  background: var(--primary) !important;
+  z-index: 3;
+  box-shadow: 0 4px 14px rgba(104, 59, 43, 0.4) !important;
+  animation: rangeSelectRotate 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.day-cell.day-range-preview {
+  background: var(--primary) !important;
+  opacity: 0.6;
+  transform: scale(1.1);
+  border-radius: var(--radius-sm);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.day-cell.day-range-start .day-number,
+.day-cell.day-range-end .day-number,
+.day-cell.day-range-preview .day-number {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.day-cell.day-in-range {
+  background: var(--medium);
+  border-radius: 0;
+}
+
+.day-cell.day-in-range:not(.day-range-start):not(.day-range-end):not(.day-range-preview) {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.day-cell.day-range-start {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.day-cell.day-range-end {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.day-cell.day-range-start.day-range-end {
+  border-radius: var(--radius-sm);
+}
+
+/* Holiday dot */
+.holiday-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.day-cell.day-range-start .holiday-dot,
+.day-cell.day-range-end .holiday-dot {
+  background: rgba(255,255,255,0.8);
+}
+
+/* ─── TOOLTIP ────────────────────────────────────────────────── */
+.tooltip-wrap {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tooltip-box {
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 0.3rem 0.55rem;
+  border-radius: 6px;
+  box-shadow: var(--shadow-md);
+}
+
+.tooltip-box::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--primary);
+}
+
+/* ─── SELECTION DIVIDER ──────────────────────────────────────── */
+.selection-divider {
+  height: 1px;
+  background: var(--medium);
+  margin: 1rem 0;
+  flex-shrink: 0;
+}
+
+/* ─── NOTES PANEL ────────────────────────────────────────────── */
+.notes-panel {
+  flex-shrink: 0;
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.notes-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.notes-range-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--medium);
+  border-radius: 20px;
+  padding: 0.2rem 0.6rem;
+}
+
+.notes-clear-btn {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.notes-clear-btn:hover {
+  color: var(--primary);
+  background: var(--medium);
+}
+
+.notes-area {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text);
+  background: transparent;
+  line-height: 2;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent calc(1.75em - 1px),
+    var(--medium) calc(1.75em - 1px),
+    var(--medium) 1.75em
+  );
+  padding: 0 0.25rem;
+  min-height: 60px;
+  transition: color var(--transition);
+}
+
+.notes-area::placeholder {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.notes-area:focus {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent calc(1.75em - 1px),
+    var(--primary) calc(1.75em - 1px),
+    var(--primary) calc(1.75em)
+  );
+}
+
+/* ─── THEME SWITCHER ─────────────────────────────────────────── */
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-btn {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--medium);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.theme-btn:hover, .theme-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ─── SELECTION BADGE ────────────────────────────────────────── */
+.selection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--medium);
+  border-radius: 20px;
+  padding: 0.25rem 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.selection-badge .clear-x {
+  cursor: pointer;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: color 150ms;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.selection-badge .clear-x:hover {
+  color: var(--primary);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 800px) {
+  .calendar-body {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    min-height: 220px;
+    max-height: 260px;
+  }
+
+  .right-panel {
+    padding: 1.25rem 1rem 1.25rem;
+  }
+
+  .hero-month-name {
+    font-size: 1.6rem;
+  }
+
+  .day-cell {
+    aspect-ratio: auto;
+    min-height: 36px;
+  }
+
+  .day-number {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-wrapper {
+    padding: 1rem 0.5rem 2rem;
+  }
+
+  .hero-panel {
+    min-height: 180px;
+  }
+
+  .calendar-card {
+    border-radius: var(--radius-md);
+  }
+
+  .right-panel {
+    padding: 1rem 0.75rem;
+  }
+
+  .cal-title-month {
+    font-size: 1.3rem;
+  }
+
+  .weekday-label {
+    font-size: 0.55rem;
+  }
+
+  .day-number {
+    font-size: 0.7rem;
+  }
+
+  .notes-area {
+    font-size: 0.75rem;
+    min-height: 64px;
+  }
+}
+
+/* ─── FRAMER MOTION ──────────────────────────────────────────── */
+.motion-wrap {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--medium); border-radius: 3px; }
