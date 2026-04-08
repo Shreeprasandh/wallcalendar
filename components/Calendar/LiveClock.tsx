@@ -45,7 +45,7 @@ export default function LiveClock() {
         transition: "color 0.2s ease"
       }}
     >
-      {format(time, "hh:mm:ss a")}
+      {format(time, "HH:mm:ss")}
     </div>
   );
 }

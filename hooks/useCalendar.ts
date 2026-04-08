@@ -112,6 +112,12 @@ export function useCalendar() {
     }));
   }, [noteKey]);
 
+  const clearAllRanges = useCallback(() => {
+    setDateRanges([]);
+    setPendingRangeStart(null);
+    setSelectionState("idle");
+  }, []);
+
   return {
     today,
     year,
@@ -126,6 +132,7 @@ export function useCalendar() {
     updateMonthlyNote,
     updateRangeNote,
     removeRange,
+    clearAllRanges,
     goToNextMonth,
     goToPrevMonth,
     goToMonth,
