@@ -40,7 +40,7 @@ nextjs-portal,
   padding: 0;
 }
 
-html, body {
+html,body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -48,7 +48,7 @@ html, body {
   background-color: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  overflow-y: scroll; /* Force vertical scrollbar to stop layout jumps */
+  overflow-y: auto; /* Allow scrollbar to hide when not needed */
   overflow-x: hidden;
 }
 
@@ -58,10 +58,10 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: 4rem 1rem 1rem 1rem; /* 4rem top padding effectively centers it initially but prevents moving */
+  justify-content: center; /* Center horizontally and vertically */
+  padding: 2rem 1rem; /* Slightly reduced top padding to help fit on small screens */
   background: var(--bg);
-  transition: background var(--transition);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* For smooth layout shifts */
   position: relative;
 }
 
@@ -80,8 +80,10 @@ html, body {
   z-index: 1;
   width: 100%;
   max-width: 900px;
-  transform: scale(0.85); /* Zoomed out a bit more as requested */
-  margin: auto; /* Force flex centering */
+  transform: scale(0.8); /* Zoomed out a bit more to ensure fit in lap view */
+  transform-origin: top center; /* Scale from the top to minimize vertical movement */
+  margin: 0 auto; /* Horizontal centering only, vertical handled by parent flex */
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ─── TOP BAR ────────────────────────────────────────────────── */
@@ -148,14 +150,14 @@ html, body {
 .calendar-body {
   display: grid;
   grid-template-columns: 280px 1fr;
-  min-height: 480px;
+  min-height: 420px; /* Reduced from 480 to fit better in viewport */
 }
 
 /* ─── HERO IMAGE PANEL ───────────────────────────────────────── */
 .hero-panel {
   position: relative;
   overflow: hidden;
-  min-height: 480px;
+  min-height: 420px; /* Matching calendar-body */
 }
 
 .hero-img {

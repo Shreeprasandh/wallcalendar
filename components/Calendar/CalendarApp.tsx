@@ -117,7 +117,7 @@ export default function CalendarApp() {
           fontSize: "0.7rem",
           color: "var(--text-faint)",
           letterSpacing: "0.06em",
-          paddingBottom: "2rem"
+          paddingBottom: "1rem"
         }}>
           {selectionState === "selecting"
             ? "Click a second date to complete your selection"
