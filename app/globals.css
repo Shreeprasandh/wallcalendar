@@ -360,7 +360,7 @@ html,body {
 .day-cell:hover:not(.day-other-month) {
   background: var(--medium);
   transform: scale(1.08);
-  z-index: 2;
+  z-index: 5000; /* Bumped to be above selected cells (z:3) */
   box-shadow: var(--shadow-sm);
 }
 
@@ -512,6 +512,18 @@ html,body {
   transform: translateX(-50%);
   border: 6px solid transparent;
   border-top-color: var(--primary);
+}
+
+/* Inverted tooltip for selection/range overlap */
+.tooltip-box.tooltip-inverted {
+  background: var(--bg); /* Light cream */
+  color: var(--primary); /* Dark brown */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--medium);
+}
+
+.tooltip-box.tooltip-inverted::after {
+  border-top-color: var(--medium);
 }
 
 /* ─── SELECTION DIVIDER ──────────────────────────────────────── */
@@ -687,19 +699,19 @@ html,body {
 
   .hero-month-name {
     font-size: 1.6rem;
-    color: var(--primary); /* Dark on mobile as requested */
-    text-shadow: none;
+    color: #ffffff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
   }
 
   .hero-year {
-    color: var(--primary);
-    opacity: 0.8;
+    color: rgba(255,255,255,0.8);
   }
 
   .hero-month-tag {
-    bottom: 0.5rem; /* Centered in design on mobile */
-    text-align: center;
-    padding: 0.5rem;
+    bottom: 4.2rem; /* Significantly higher to stay inside image */
+    right: 0;
+    text-align: right;
+    padding: 0 1.4rem;
   }
 
   .hero-chevron-wrap {

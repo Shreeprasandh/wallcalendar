@@ -100,7 +100,7 @@ export default function DayCell({
       )}
       {holiday && showTooltip && (
         <div className="tooltip-wrap">
-          <div className="tooltip-box">
+          <div className={`tooltip-box${(isStart || isEnd || inRange) ? " tooltip-inverted" : ""}`}>
             {holiday.emoji} {holiday.name}
           </div>
         </div>
